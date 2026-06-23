@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>طاها جبرائیلی | برنامه‌نویس</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080d1a;
+    --bg2:       #0d1527;
+    --bg3:       #111e38;
+    --blue:      #2563eb;
+    --blue-light:#3b82f6;
+    --cyan:      #06b6d4;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --border:    rgba(37,99,235,0.25);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 18px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,13,26,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-size: 20px; font-weight: 800;
+    background: linear-gradient(90deg, #fff 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: #fff; }
+
+  /* ── Hero ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 100px 60px 60px;
+    position: relative; overflow: hidden;
+  }
+
+  /* animated grid background */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+    opacity: 0.4;
+  }
+  @keyframes gridMove {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  /* glowing orb */
+  #hero::after {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .7; }
+    50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 800px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(37,99,235,0.15);
+    border: 1px solid var(--border);
+    padding: 6px 16px; border-radius: 999px;
+    font-size: 13px; color: var(--cyan);
+    margin-bottom: 28px;
+    animation: fadeDown .8s ease both;
+  }
+  .badge-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .hero-name {
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -2px;
+    animation: fadeDown .8s .1s ease both;
+  }
+  .hero-name span {
+    background: linear-gradient(135deg, var(--blue-light) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero-tagline {
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: var(--muted); font-weight: 400;
+    margin: 20px 0 40px;
+    line-height: 1.7;
+    animation: fadeDown .8s .2s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    animation: fadeDown .8s .3s ease both;
+  }
+  .btn-primary {
+    padding: 14px 32px; border-radius: 10px;
+    background: var(--blue); color: #fff;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    text-decoration: none;
+    box-shadow: 0 0 24px rgba(37,99,235,0.4);
+  }
+  .btn-primary:hover {
+    background: var(--blue-light);
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(37,99,235,0.6);
+  }
+  .btn-outline {
+    padding: 14px 32px; border-radius: 10px;
+    background: transparent; color: var(--text);
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: border-color .2s, transform .2s, background .2s;
+    text-decoration: none;
+  }
+  .btn-outline:hover {
+    border-color: var(--blue-light);
+    background: rgba(37,99,235,0.08);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeDown {
+    from { opacity:0; transform: translateY(-20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ── Sections ── */
+  section { padding: 100px 60px; max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800; letter-spacing: -1px;
+    margin-bottom: 50px;
+    line-height: 1.15;
+  }
+  .section-title span {
+    background: linear-gradient(90deg, var(--blue-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* ── About ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .about-photo {
+    aspect-ratio: 1;
+    border-radius: 20px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+    position: relative; overflow: hidden;
+  }
+  .about-photo::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(37,99,235,0.1), transparent);
+  }
+  .photo-placeholder { opacity: 0.3; font-size: 14px; color: var(--muted); text-align: center; line-height: 2; }
+  .about-text p {
+    color: var(--muted); line-height: 1.9; font-size: 15px; margin-bottom: 16px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 32px;
+  }
+  .stat {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .stat-num {
+    font-size: 28px; font-weight: 800;
+    background: linear-gradient(90deg, var(--blue-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Skills ── */
+  #skills { background: var(--bg2); max-width: 100%; padding: 100px 60px; }
+  #skills > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .skill-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px;
+    transition: border-color .25s, transform .25s;
+  }
+  .skill-card:hover { border-color: var(--blue-light); transform: translateY(-3px); }
+  .skill-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .skill-name { font-size: 15px; font-weight: 600; }
+  .skill-pct { font-size: 13px; color: var(--cyan); font-weight: 700; }
+  .skill-bar { height: 5px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+  .skill-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 1s ease;
+  }
+  .skill-fill.animated { transform: scaleX(1); }
+
+  /* ── Projects ── */
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;
+  }
+  .project-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+    position: relative; overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+  }
+  .project-card:hover {
+    border-color: var(--blue-light);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .project-icon { font-size: 36px; margin-bottom: 16px; }
+  .project-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .project-desc { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3);
+    color: var(--blue-light); font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  /* ── Contact ── */
+  #contact { background: var(--bg2); max-width: 100%; padding: 100px 60px; }
+  #contact > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1100px; margin: 0 auto; }
+  .contact-info p { color: var(--muted); font-size: 15px; line-height: 1.9; margin-bottom: 32px; }
+  .contact-links { display: flex; flex-direction: column; gap: 14px; }
+  .contact-link {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px;
+    text-decoration: none; color: var(--text);
+    font-size: 14px; font-weight: 500;
+    transition: border-color .2s, background .2s;
+  }
+  .contact-link:hover { border-color: var(--blue-light); background: rgba(37,99,235,0.08); }
+  .contact-link-icon { font-size: 20px; }
+
+  /* Form */
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 13px 16px;
+    color: var(--text); font-family: inherit; font-size: 14px;
+    outline: none; transition: border-color .2s;
+    direction: rtl;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--blue-light);
+  }
+  .form-group textarea { resize: vertical; min-height: 130px; }
+  .form-group select option { background: var(--bg2); }
+  .btn-submit {
+    width: 100%; padding: 14px;
+    background: var(--blue); color: #fff;
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 0 24px rgba(37,99,235,0.35);
+  }
+  .btn-submit:hover {
+    background: var(--blue-light);
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(37,99,235,0.5);
+  }
+  .success-msg {
+    display: none; background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.3);
+    border-radius: 10px; padding: 14px;
+    color: var(--cyan); font-size: 14px; text-align: center; margin-top: 12px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 32px 60px;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 13px;
+  }
+
+  /* ── Reveal animation ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Responsive ── */
+  @media(max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 100px 24px 60px; }
+    section { padding: 70px 24px; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .about-photo { max-width: 260px; margin: 0 auto; }
+    #skills, #contact { padding: 70px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="logo">طاها جبرائیلی</div>
+  <ul class="nav-links">
+    <li><a href="#about">درباره من</a></li>
+    <li><a href="#skills">مهارت‌ها</a></li>
+    <li><a href="#projects">نمونه کارها</a></li>
+    <li><a href="#contact">تماس</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      آماده همکاری و دریافت پروژه
+    </div>
+    <h1 class="hero-name">
+      طاها<br><span>جبرائیلی</span>
+    </h1>
+    <p class="hero-tagline">
+      دانشجوی مهندسی کامپیوتر | سازنده ربات‌های هوشمند و وب‌اپلیکیشن<br>
+      کد می‌نویسم تا مشکلات واقعی رو حل کنم
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">نمونه کارها</a>
+      <a href="#contact" class="btn-outline">سفارش پروژه</a>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="about-grid reveal">
+    <div class="about-photo">
+      <div class="photo-placeholder">
+        🖼️<br>عکس پروفایل<br>اینجا قرار میگیره
+      </div>
+    </div>
+    <div class="about-text">
+      <p class="section-label">درباره من</p>
+      <h2 class="section-title" style="margin-bottom:20px">یه برنامه‌نویس که <span>نتیجه</span> میده</h2>
+      <p>دانشجوی ترم دوم کارشناسی مهندسی کامپیوتر با مدرک کاردانی هستم. از ساخت ربات‌های تلگرام تا طراحی سیستم‌های مدیریت، همیشه دنبال راه‌حل‌های کاربردی بودم.</p>
+      <p>با Python، HTML/CSS و SQL کار میکنم و به هوش مصنوعی و اتوماسیون علاقه خاصی دارم. هدفم اینه که تکنولوژی رو برای کسب‌وکارها ساده و مفید کنم.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="stat-num">۳+</div>
+          <div class="stat-label">پروژه انجام‌شده</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">۲</div>
+          <div class="stat-label">سال تجربه</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">۵+</div>
+          <div class="stat-label">مهارت فنی</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="reveal">
+    <p class="section-label">توانایی‌ها</p>
+    <h2 class="section-title">مهارت‌های <span>فنی</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">Python</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.80"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">HTML / CSS</span><span class="skill-pct">70%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.70"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">SQL</span><span class="skill-pct">75%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.75"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">Adobe Photoshop</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.80"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">3D Max</span><span class="skill-pct">40%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.40"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-name">Unity</span><span class="skill-pct">20%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.20"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="reveal">
+    <p class="section-label">نمونه کارها</p>
+    <h2 class="section-title">پروژه‌هایی که <span>ساختم</span></h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-icon">🤖</div>
+      <div class="project-title">ربات تلگرام پاسخ خودکار</div>
+      <div class="project-desc">ربات تلگرام حرفه‌ای با منوی دکمه‌ای، پاسخ خودکار به سوالات رایج و ارسال مستقیم پیام مشتری به ادمین. مناسب برای هر کسب‌وکاری.</div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Telegram Bot API</span>
+        <span class="tag">اتوماسیون</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-icon">🌐</div>
+      <div class="project-title">سیستم ثبت‌نام دروس جبرانی</div>
+      <div class="project-desc">سیستم آنلاین ثبت‌نام با پنل مدیریت کامل برای ادمین، اتصال به پایگاه داده و مدیریت دانشجویان.</div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">HTML/CSS</span>
+        <span class="tag">SQL</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-icon">🖥️</div>
+      <div class="project-title">سایت شخصی</div>
+      <div class="project-desc">طراحی و پیاده‌سازی وب‌سایت شخصی با رابط کاربری مدرن و ریسپانسیو.</div>
+      <div class="project-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">ارتباط با من</p>
+    <h2 class="section-title">بریم <span>شروع کنیم</span></h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <p>اگه پروژه‌ای داری یا دنبال همکاری هستی، خوشحال میشم باهات صحبت کنم. سریع‌ترین راه تماس از طریق تلگرام هست.</p>
+      <div class="contact-links">
+        <a href="https://t.me/Taha_Jabraeili" class="contact-link" target="_blank">
+          <span class="contact-link-icon">✈️</span>
+          <span>@Taha_Jabraeili — تلگرام</span>
+        </a>
+        <a href="mailto:tahajabraeili@gmail.com" class="contact-link">
+          <span class="contact-link-icon">📧</span>
+          <span>tahajabraeili@gmail.com</span>
+        </a>
+        <a href="https://instagram.com/taha.dev.ir" class="contact-link" target="_blank">
+          <span class="contact-link-icon">📸</span>
+          <span>taha.dev.ir — اینستاگرام</span>
+        </a>
+      </div>
+    </div>
+    <div class="reveal">
+      <form id="contactForm">
+        <div class="form-group">
+          <label>اسم شما</label>
+          <input type="text" placeholder="مثلاً: علی رضایی" required>
+        </div>
+        <div class="form-group">
+          <label>نوع پروژه</label>
+          <select>
+            <option>ربات تلگرام</option>
+            <option>طراحی سایت</option>
+            <option>اتوماسیون با Python</option>
+            <option>مشاوره</option>
+            <option>سایر</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>توضیح پروژه</label>
+          <textarea placeholder="پروژه‌ات رو توضیح بده..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>راه ارتباطی (تلگرام یا ایمیل)</label>
+          <input type="text" placeholder="@username یا email@..." required>
+        </div>
+        <button type="submit" class="btn-submit">ارسال سفارش 🚀</button>
+        <div class="success-msg" id="successMsg">✅ پیامت دریافت شد! به زودی باهات تماس میگیرم.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>ساخته‌شده با ❤️ توسط طاها جبرائیلی — ۱۴۰۴</p>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Skill bar animation
+  const skillObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.querySelectorAll('.skill-fill').forEach(fill => {
+          setTimeout(() => fill.classList.add('animated'), 200);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.skills-grid').forEach(g => skillObserver.observe(g));
+
+  // Form submit
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.btn-submit');
+    btn.textContent = 'در حال ارسال...';
+    btn.disabled = true;
+    setTimeout(() => {
+      document.getElementById('successMsg').style.display = 'block';
+      btn.textContent = 'ارسال شد ✅';
+    }, 1000);
+  });
+
+  // Nav active link highlight
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.nav-links a');
+    let current = '';
+    sections.forEach(s => {
+      if(window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    links.forEach(l => {
+      l.style.color = l.getAttribute('href') === '#'+current ? '#fff' : '';
+    });
+  });
+</script>
+</body>
+</html>
