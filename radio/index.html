@@ -383,28 +383,30 @@
         // ==========================================
         // 📻 لیست رادیوهای آنلاین
         // ==========================================
-        const radioStations = [
-            // ===== Part 1 - Zeno.fm (با پروکسی) =====
-            { name: "رادیو کردی", genre: "کردی", url: "https://corsproxy.io/?https://stream.zeno.fm/ttknzrr93vkvv" },
-            { name: "نوستالژی ۱", genre: "نوستالژی", url: "https://corsproxy.io/?https://stream.zeno.fm/yjq14yrnqiavv" },
-            { name: "نوستالژی ۲", genre: "نوستالژی", url: "https://corsproxy.io/?https://stream.zeno.fm/zgnryqpihulvv" },
-            { name: "نوستالژی ۳", genre: "نوستالژی", url: "https://corsproxy.io/?https://stream.zeno.fm/uzcveonohb4vv" },
-            { name: "نوستالژی ۴", genre: "نوستالژی", url: "https://corsproxy.io/?https://stream.zeno.fm/ss1rybwmkauvv" },
-            { name: "رادیو میکس", genre: "میکس", url: "https://corsproxy.io/?https://stream.zeno.fm/4grnzpftgv3uv" },
-            { name: "رادیو دیپ", genre: "دیپ هاوس", url: "https://corsproxy.io/?https://stream.zeno.fm/r9gopzuabz9uv" },
-            { name: "رادیو شوتی", genre: "شوتی", url: "https://corsproxy.io/?https://stream.zeno.fm/pjw9wy8jdfavv" },
-            { name: "رادیو قدیم", genre: "قدیمی", url: "https://corsproxy.io/?https://stream.zeno.fm/ukjfpjqigaktv" },
-            { name: "رادیو فانک", genre: "فانک", url: "https://corsproxy.io/?https://stream.zeno.fm/c9h2f1bfokutv" },
+        const PROXY_URL = 'https://radio-proxy.tahajabraeili.workers.dev/'; // آدرس Worker رو اینجا بذار
 
-            // ===== Part 2 - سرور اختصاصی (با https) =====
-            { name: "کلاسیک", genre: "کلاسیک", url: "https://212.80.8.200/listen/classic/radio.mp3" },
-            { name: "خز", genre: "خز", url: "https://212.80.8.200/listen/khaaz/radio.mp3" },
-            { name: "فانک (سرور)", genre: "فانک", url: "https://212.80.8.200/listen/phonk/radio.mp3" },
-            { name: "دیپ (سرور)", genre: "دیپ هاوس", url: "https://212.80.8.200/listen/dep/radio.mp3" },
-            { name: "رپ", genre: "رپ فارسی", url: "https://212.80.8.200/listen/rapfa/radio.mp3" },
-            { name: "ریمیکس", genre: "ریمیکس", url: "https://212.80.8.200/listen/remixfa/radio.mp3" },
-            { name: "شوتی (سرور)", genre: "شوتی", url: "https://212.80.8.200/listen/shooti/radio.mp3" },
-            { name: "جزیره", genre: "جزیره", url: "https://212.80.8.200/listen/jazire/radio.mp3" },
+        const radioStations = [
+            // ===== Part 1 - Zeno.fm =====
+            { name: "رادیو کردی", genre: "کردی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/ttknzrr93vkvv") },
+            { name: "نوستالژی ۱", genre: "نوستالژی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/yjq14yrnqiavv") },
+            { name: "نوستالژی ۲", genre: "نوستالژی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/zgnryqpihulvv") },
+            { name: "نوستالژی ۳", genre: "نوستالژی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/uzcveonohb4vv") },
+            { name: "نوستالژی ۴", genre: "نوستالژی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/ss1rybwmkauvv") },
+            { name: "رادیو میکس", genre: "میکس", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/4grnzpftgv3uv") },
+            { name: "رادیو دیپ", genre: "دیپ هاوس", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/r9gopzuabz9uv") },
+            { name: "رادیو شوتی", genre: "شوتی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/pjw9wy8jdfavv") },
+            { name: "رادیو قدیم", genre: "قدیمی", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/ukjfpjqigaktv") },
+            { name: "رادیو فانک", genre: "فانک", url: PROXY_URL + encodeURIComponent("https://stream.zeno.fm/c9h2f1bfokutv") },
+
+            // ===== Part 2 - سرور اختصاصی =====
+            { name: "کلاسیک", genre: "کلاسیک", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/classic/radio.mp3") },
+            { name: "خز", genre: "خز", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/khaaz/radio.mp3") },
+            { name: "فانک (سرور)", genre: "فانک", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/phonk/radio.mp3") },
+            { name: "دیپ (سرور)", genre: "دیپ هاوس", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/dep/radio.mp3") },
+            { name: "رپ", genre: "رپ فارسی", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/rapfa/radio.mp3") },
+            { name: "ریمیکس", genre: "ریمیکس", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/remixfa/radio.mp3") },
+            { name: "شوتی (سرور)", genre: "شوتی", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/shooti/radio.mp3") },
+            { name: "جزیره", genre: "جزیره", url: PROXY_URL + encodeURIComponent("https://212.80.8.200/listen/jazire/radio.mp3") },
         ];
 
         // ==========================================
