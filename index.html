@@ -327,6 +327,11 @@
     transform: translateY(-2px);
     box-shadow: 0 0 36px rgba(37,99,235,0.5);
   }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
   .success-msg {
     display: none; background: rgba(6,182,212,0.1);
     border: 1px solid rgba(6,182,212,0.3);
@@ -524,11 +529,11 @@
       <form id="contactForm">
         <div class="form-group">
           <label>اسم شما</label>
-          <input type="text" placeholder="مثلاً: علی رضایی" required>
+          <input type="text" id="name" placeholder="مثلاً: علی رضایی" required>
         </div>
         <div class="form-group">
           <label>نوع پروژه</label>
-          <select>
+          <select id="projectType">
             <option>ربات تلگرام</option>
             <option>طراحی سایت</option>
             <option>اتوماسیون با Python</option>
@@ -538,11 +543,11 @@
         </div>
         <div class="form-group">
           <label>توضیح پروژه</label>
-          <textarea placeholder="پروژه‌ات رو توضیح بده..." required></textarea>
+          <textarea id="description" placeholder="پروژه‌ات رو توضیح بده..." required></textarea>
         </div>
         <div class="form-group">
           <label>راه ارتباطی (تلگرام یا ایمیل)</label>
-          <input type="text" placeholder="@username یا email@..." required>
+          <input type="text" id="contactInfo" placeholder="@username یا email@..." required>
         </div>
         <button type="submit" class="btn-submit">ارسال سفارش 🚀</button>
         <div class="success-msg" id="successMsg">✅ پیامت دریافت شد! به زودی باهات تماس میگیرم.</div>
@@ -576,16 +581,71 @@
   }, { threshold: 0.3 });
   document.querySelectorAll('.skills-grid').forEach(g => skillObserver.observe(g));
 
-  // Form submit
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
+  // ============================================
+  // Form submit - ارسال به تلگرام
+  // ============================================
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    
     const btn = this.querySelector('.btn-submit');
+    const successMsg = document.getElementById('successMsg');
+    
+    // گرفتن مقادیر فرم
+    const name = document.getElementById('name').value.trim();
+    const projectType = document.getElementById('projectType').value;
+    const description = document.getElementById('description').value.trim();
+    const contactInfo = document.getElementById('contactInfo').value.trim();
+    
+    // ==============================================
+    // 🔑 این دو خط رو با اطلاعات خودت عوض کن
+    // ==============================================
+    const BOT_TOKEN = '8855137538:AAHsooqwkyZWEOlIvzr-sAqM5trmZMZYrdU';    // از @BotFather
+    const CHAT_ID = '140952064';       // از @userinfobot
+    // ==============================================
+    
+    // ساخت پیام برای تلگرام
+    const telegramMessage = `📩 **سفارش جدید از سایت طاها** 📩
+    
+    👤 **نام:** ${name || 'نامشخص'}
+    📂 **نوع پروژه:** ${projectType}
+    📝 **توضیحات:** ${description || '—'}
+    📞 **راه ارتباطی:** ${contactInfo || '—'}`;
+    
     btn.textContent = 'در حال ارسال...';
     btn.disabled = true;
-    setTimeout(() => {
-      document.getElementById('successMsg').style.display = 'block';
-      btn.textContent = 'ارسال شد ✅';
-    }, 1000);
+    
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: telegramMessage,
+          parse_mode: 'Markdown'
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.ok) {
+        successMsg.style.display = 'block';
+        btn.textContent = 'ارسال شد ✅';
+        this.reset();
+        
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+          btn.textContent = 'ارسال سفارش 🚀';
+          btn.disabled = false;
+        }, 5000);
+      } else {
+        throw new Error('خطا از سمت تلگرام');
+      }
+    } catch (error) {
+      alert('❌ خطا در ارسال! لطفاً دوباره تلاش کن.');
+      console.error('خطا:', error);
+      btn.textContent = 'ارسال سفارش 🚀';
+      btn.disabled = false;
+    }
   });
 
   // Nav active link highlight
