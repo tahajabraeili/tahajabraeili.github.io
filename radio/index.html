@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رادیو آنلاین | طاها جبرائیلی</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            background: #0b0e14;
+            color: #e0e4ec;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            direction: rtl;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 30px;
+            background: rgba(11, 14, 20, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .header a:hover {
+            color: #fff;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== PLAYER CONTAINER ===== */
+        .player-container {
+            margin-top: 80px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .player-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .player-title span {
+            color: #6c8cff;
+        }
+
+        .player-sub {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* ===== VISUALIZER (دایره واکنش‌گرا) ===== */
+        .visualizer-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .visualizer {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1a2a4a, #0b0e14 80%);
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: box-shadow 0.1s ease;
+            box-shadow: 0 0 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .visualizer.active {
+            animation: pulseGlow 0.5s ease infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 30px rgba(37, 99, 235, 0.2), inset 0 0 30px rgba(37, 99, 235, 0.05);
+            }
+            100% {
+                box-shadow: 0 0 70px rgba(37, 99, 235, 0.5), inset 0 0 50px rgba(37, 99, 235, 0.15);
+            }
+        }
+
+        /* دایره‌های داخلی برای انیمیشن بیس */
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1.5px solid rgba(37, 99, 235, 0.15);
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+
+        .ring:nth-child(1) {
+            width: 160px;
+            height: 160px;
+            animation-delay: 0s;
+        }
+        .ring:nth-child(2) {
+            width: 190px;
+            height: 190px;
+            animation-delay: 0.6s;
+        }
+        .ring:nth-child(3) {
+            width: 210px;
+            height: 210px;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes ringPulse {
+            0%,
+            100% {
+                transform: scale(0.95);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        /* آیکون پلی در وسط */
+        .play-icon-center {
+            font-size: 52px;
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+            background: rgba(11, 14, 20, 0.6);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            transition: all 0.3s;
+        }
+
+        .play-icon-center:hover {
+            transform: scale(1.08);
+            border-color: #6c8cff;
+            background: rgba(37, 99, 235, 0.15);
+        }
+
+        .play-icon-center.playing {
+            border-color: #06b6d4;
+            animation: iconPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(6, 182, 212, 0.5);
+            }
+        }
+
+        /* ===== RADIO LIST ===== */
+        .radio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-left: 6px;
+        }
+
+        .radio-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .radio-list::-webkit-scrollbar-track {
+            background: #141a24;
+            border-radius: 10px;
+        }
+        .radio-list::-webkit-scrollbar-thumb {
+            background: #6c8cff;
+            border-radius: 10px;
+        }
+
+        .radio-item {
+            background: rgba(20, 26, 36, 0.7);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .radio-item:hover {
+            border-color: rgba(37, 99, 235, 0.5);
+            background: rgba(37, 99, 235, 0.08);
+            transform: translateX(-4px);
+        }
+
+        .radio-item.active {
+            border-color: #6c8cff;
+            background: rgba(37, 99, 235, 0.15);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+        }
+
+        .radio-item .info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .radio-item .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .radio-item .genre {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .radio-item .status {
+            font-size: 12px;
+            color: #64748b;
+            background: rgba(100, 116, 139, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            transition: all 0.3s;
+        }
+
+        .radio-item.active .status {
+            color: #06b6d4;
+            border-color: rgba(6, 182, 212, 0.3);
+            background: rgba(6, 182, 212, 0.08);
+            animation: blinkStatus 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blinkStatus {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* ===== AUDIO ELEMENT (مخفی) ===== */
+        #audioPlayer {
+            display: none;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 30px;
+            color: #475569;
+            font-size: 12px;
+            text-align: center;
+        }
+        .footer a {
+            color: #6c8cff;
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .visualizer {
+                width: 170px;
+                height: 170px;
+            }
+            .play-icon-center {
+                width: 60px;
+                height: 60px;
+                font-size: 36px;
+            }
+            .ring:nth-child(1) {
+                width: 120px;
+                height: 120px;
+            }
+            .ring:nth-child(2) {
+                width: 145px;
+                height: 145px;
+            }
+            .ring:nth-child(3) {
+                width: 160px;
+                height: 160px;
+            }
+            .player-title {
+                font-size: 22px;
+            }
+            .radio-item {
+                padding: 12px 16px;
+            }
+            .header {
+                padding: 12px 16px;
+            }
+            .logo {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="logo">🎵 رادیو طاها</div>
+        <a href="/">← بازگشت به سایت</a>
+    </header>
+
+    <!-- ===== PLAYER ===== -->
+    <div class="player-container">
+
+        <h1 class="player-title">رادیو <span>آنلاین</span></h1>
+        <p class="player-sub">یک استیشن رو انتخاب کن و لذت ببر 🎧</p>
+
+        <!-- Visualizer -->
+        <div class="visualizer-wrapper">
+            <div class="visualizer" id="visualizer">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="play-icon-center" id="playBtn">▶</div>
+            </div>
+        </div>
+
+        <!-- Radio List -->
+        <div class="radio-list" id="radioList">
+            <!-- استیشن‌ها توسط جاوااسکریپت ساخته میشن -->
+        </div>
+
+        <div class="footer">
+            ساخته‌شده با ❤️ توسط <a href="/">طاها جبرائیلی</a>
+        </div>
+    </div>
+
+    <!-- ===== AUDIO ELEMENT ===== -->
+    <audio id="audioPlayer" preload="none"></audio>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // ==========================================
+        // 📻 لیست رادیوهای آنلاین
+        // ==========================================
+        const radioStations = [
+            { name: "رادیو جوان", genre: "پاپ ایرانی", url: "https://radiojavan.ir/stream" },
+            { name: "رادیو ایران", genre: "کلاسیک ایرانی", url: "https://radio.iranseda.ir/stream" },
+            { name: "رادیو سلامت", genre: "آرامش‌بخش", url: "https://radio.iranseda.ir/stream/salamat" },
+            { name: "رادیو فرهنگ", genre: "فرهنگی و هنری", url: "https://radio.iranseda.ir/stream/farhang" },
+            { name: "رادیو تهران", genre: "محلی", url: "https://radio.iranseda.ir/stream/tehran" },
+            { name: "رادیو اقتصاد", genre: "اخبار و اقتصاد", url: "https://radio.iranseda.ir/stream/eghtesad" },
+            { name: "رادیو ورزش", genre: "ورزشی", url: "https://radio.iranseda.ir/stream/varzesh" },
+            { name: "رادیو قرآن", genre: "قرآنی", url: "https://radio.iranseda.ir/stream/quran" },
+            // ==========================================
+            // 🔽 می‌تونی هر استیشن دیگه‌ای رو اینجا اضافه کنی
+            // ==========================================
+        ];
+
+        // ==========================================
+        // 🎛️ متغیرهای اصلی
+        // ==========================================
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const visualizer = document.getElementById('visualizer');
+        const radioList = document.getElementById('radioList');
+        let currentStation = null;
+        let isPlaying = false;
+
+        // ==========================================
+        // 📋 ساخت لیست رادیوها
+        // ==========================================
+        function renderStations() {
+            radioList.innerHTML = '';
+            radioStations.forEach((station, index) => {
+                const div = document.createElement('div');
+                div.className = 'radio-item';
+                div.dataset.index = index;
+                div.innerHTML = `
+                    <div class="info">
+                        <span class="name">${station.name}</span>
+                        <span class="genre">${station.genre}</span>
+                    </div>
+                    <span class="status">${index === 0 ? '▶ پخش' : 'انتخاب'}</span>
+                `;
+                div.addEventListener('click', () => playStation(index));
+                radioList.appendChild(div);
+            });
+        }
+
+        // ==========================================
+        // ▶️ پخش استیشن
+        // ==========================================
+        function playStation(index) {
+            const station = radioStations[index];
+            if (!station) return;
+
+            // بروزرسانی حالت
+            currentStation = index;
+            audio.src = station.url;
+            audio.load();
+
+            // پخش
+            audio.play()
+                .then(() => {
+                    isPlaying = true;
+                    updateUI(index);
+                })
+                .catch(err => {
+                    console.warn('خطا در پخش:', err);
+                    alert('❌ امکان پخش این استیشن وجود نداره. لطفاً یکی دیگه رو امتحان کن.');
+                    resetPlayer();
+                });
+        }
+
+        // ==========================================
+        // ⏯️ تغییر وضعیت پلی/مکث
+        // ==========================================
+        function togglePlay() {
+            if (!currentStation && currentStation !== 0) {
+                // اگر هیچ استیشنی انتخاب نشده، اولین رو پلی کن
+                playStation(0);
+                return;
+            }
+
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                updateUI(currentStation);
+            } else {
+                audio.play()
+                    .then(() => {
+                        isPlaying = true;
+                        updateUI(currentStation);
+                    })
+                    .catch(err => {
+                        console.warn('خطا در پخش:', err);
+                        alert('❌ خطا در پخش. لطفاً دوباره تلاش کن.');
+                    });
+            }
+        }
+
+        // ==========================================
+        // 🎨 بروزرسانی UI
+        // ==========================================
+        function updateUI(activeIndex) {
+            // بروزرسانی آیتم‌های لیست
+            document.querySelectorAll('.radio-item').forEach((item, i) => {
+                item.classList.toggle('active', i === activeIndex);
+                const status = item.querySelector('.status');
+                if (i === activeIndex && isPlaying) {
+                    status.textContent = '🎵 در حال پخش';
+                } else if (i === activeIndex && !isPlaying) {
+                    status.textContent = '⏸ مکث';
+                } else {
+                    status.textContent = 'انتخاب';
+                }
+            });
+
+            // بروزرسانی دکمه وسط
+            if (isPlaying) {
+                playBtn.textContent = '⏸';
+                playBtn.classList.add('playing');
+                visualizer.classList.add('active');
+            } else {
+                playBtn.textContent = '▶';
+                playBtn.classList.remove('playing');
+                visualizer.classList.remove('active');
+            }
+        }
+
+        // ==========================================
+        // 🔄 ریست پلیر
+        // ==========================================
+        function resetPlayer() {
+            isPlaying = false;
+            audio.pause();
+            audio.src = '';
+            currentStation = null;
+            updateUI(null);
+            document.querySelectorAll('.radio-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.status').textContent = 'انتخاب';
+            });
+        }
+
+        // ==========================================
+        // 🎧 واکنش به بیس آهنگ (تغییر رنگ دایره)
+        // ==========================================
+        // استفاده از AnalyserNode برای تشخیص بیس
+        let analyser = null;
+        let dataArray = null;
+        let animationId = null;
+
+        function setupAudioContext() {
+            if (!audio.src) return;
+
+            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaElementSource(audio);
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            visualizeBass();
+        }
+
+        function visualizeBass() {
+            if (!analyser) return;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            // گرفتن مقدار بیس (فرکانس‌های پایین)
+            let bassSum = 0;
+            for (let i = 0; i < 10; i++) {
+                bassSum += dataArray[i];
+            }
+            const bassAvg = bassSum / 10; // 0 تا 255
+
+            // تبدیل به شدت نور (0 تا 1)
+            const intensity = Math.min(bassAvg / 150, 1);
+
+            // تغییر رنگ و اندازه سایه دایره
+            const r = Math.floor(37 + intensity * 200);
+            const g = Math.floor(99 + intensity * 100);
+            const b = Math.floor(235 - intensity * 50);
+
+            visualizer.style.boxShadow = `
+                0 0 ${40 + intensity * 60}px rgba(${r}, ${g}, ${b}, ${0.3 + intensity * 0.5}),
+                inset 0 0 ${30 + intensity * 40}px rgba(${r}, ${g}, ${b}, ${0.1 + intensity * 0.2})
+            `;
+
+            // تغییر رنگ حاشیه دایره
+            visualizer.style.borderColor = `rgba(${r}, ${g}, ${b}, ${0.3 + intensity * 0.5})`;
+
+            // تغییر رنگ رینگ‌ها
+            document.querySelectorAll('.ring').forEach((ring, i) => {
+                const delay = i * 0.3;
+                const scale = 0.95 + intensity * 0.1;
+                ring.style.borderColor = `rgba(${r}, ${g}, ${b}, ${0.1 + intensity * 0.3})`;
+                ring.style.transform = `scale(${scale})`;
+                ring.style.animationDelay = `${delay}s`;
+            });
+
+            animationId = requestAnimationFrame(visualizeBass);
+        }
+
+        // ==========================================
+        // 🎵 رویدادهای Audio
+        // ==========================================
+        audio.addEventListener('play', () => {
+            if (!analyser) {
+                try {
+                    setupAudioContext();
+                } catch (e) {
+                    console.warn('Web Audio API پشتیبانی نمیشه:', e);
+                }
+            }
+        });
+
+        audio.addEventListener('pause', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            // ریست کردن به حالت عادی
+            visualizer.style.boxShadow = '0 0 40px rgba(37,99,235,0.2)';
+            visualizer.style.borderColor = 'rgba(37,99,235,0.3)';
+        });
+
+        audio.addEventListener('ended', () => {
+            resetPlayer();
+        });
+
+        audio.addEventListener('error', () => {
+            console.warn('خطا در پخش فایل صوتی');
+            resetPlayer();
+        });
+
+        // ==========================================
+        // 🖱️ کلیک روی دکمه وسط
+        // ==========================================
+        playBtn.addEventListener('click', togglePlay);
+
+        // ==========================================
+        // 🚀 مقداردهی اولیه
+        // ==========================================
+        renderStations();
+
+        // به‌صورت خودکار اولین استیشن رو پلی کن (اختیاری)
+        // اگه میخوای با ورود به صفحه خودکار شروع کنه، خط زیر رو از حالت کامنت خارج کن:
+        // setTimeout(() => playStation(0), 500);
+    </script>
+
+</body>
+</html>
