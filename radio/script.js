@@ -12,14 +12,14 @@
             { name: "رادیو شوتی", genre: "شوتی", url: "https://stream-177.surfernetwork.com/pjw9wy8jdfavv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwanc5d3k4amRmYXZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJPMURpZHVUNVMxU1UwVVAyejZXSV9BIiwiaWF0IjoxNzgyMzA1NzIxLCJleHAiOjE3ODIzMDU3ODF9.HjMNDX00bLC8V9madnq4Bp3L2croQmE7bIHC9fHtcks" },
             { name: "رادیو قدیم", genre: "قدیمی", url: "https://stream-177.surfernetwork.com/ukjfpjqigaktv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ1a2pmcGpxaWdha3R2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUNVFkRFpCZ1I5NkV2ZDAtX0hXUG1nIiwiaWF0IjoxNzgyMzA1NzU4LCJleHAiOjE3ODIzMDU4MTh9.tzbjrNZcMrFWQULz61lf_ULCV-hoWUVeem3P9i2SNuY" },
             { name: "رادیو فانک", genre: "فانک", url: "https://stream-177.surfernetwork.com/c9h2f1bfokutv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJjOWgyZjFiZm9rdXR2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJ5Ql9WbWk0RlNXaXRSRXltT3lEb0RBIiwiaWF0IjoxNzgyMzA1ODE0LCJleHAiOjE3ODIzMDU4NzR9.3sYLbkUXjXDErdbyDC-h__l0CDlmmFD-uF9wSpVrZv0" },
-            { name: "کلاسیک", genre: "کلاسیک", url: "http://212.80.8.200/listen/classic/radio.mp3" },
-            { name: "خز", genre: "خز", url: "http://212.80.8.200/listen/khaaz/radio.mp3" },
-            { name: "فانک (سرور)", genre: "فانک", url: "http://212.80.8.200/listen/phonk/radio.mp3" },
-            { name: "دیپ (سرور)", genre: "دیپ هاوس", url: "http://212.80.8.200/listen/dep/radio.mp3" },
-            { name: "رپ", genre: "رپ فارسی", url: "http://212.80.8.200/listen/rapfa/radio.mp3" },
-            { name: "ریمیکس", genre: "ریمیکس", url: "http://212.80.8.200/listen/remixfa/radio.mp3" },
-            { name: "شوتی (سرور)", genre: "شوتی", url: "http://212.80.8.200/listen/shooti/radio.mp3" },
-            { name: "جزیره", genre: "جزیره", url: "http://212.80.8.200/listen/jazire/radio.mp3" },
+            { name: "کلاسیک", genre: "کلاسیک", url: "https://212.80.8.200/listen/classic/radio.mp3" },
+            { name: "خز", genre: "خز", url: "https://212.80.8.200/listen/khaaz/radio.mp3" },
+            { name: "فانک (سرور)", genre: "فانک", url: "https://212.80.8.200/listen/phonk/radio.mp3" },
+            { name: "دیپ (سرور)", genre: "دیپ هاوس", url: "https://212.80.8.200/listen/dep/radio.mp3" },
+            { name: "رپ", genre: "رپ فارسی", url: "https://212.80.8.200/listen/rapfa/radio.mp3" },
+            { name: "ریمیکس", genre: "ریمیکس", url: "https://212.80.8.200/listen/remixfa/radio.mp3" },
+            { name: "شوتی (سرور)", genre: "شوتی", url: "https://212.80.8.200/listen/shooti/radio.mp3" },
+            { name: "جزیره", genre: "جزیره", url: "https://212.80.8.200/listen/jazire/radio.mp3" },
         ];
 
         // ==========================================
